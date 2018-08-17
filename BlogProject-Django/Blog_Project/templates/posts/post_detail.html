@@ -1,0 +1,65 @@
+{% extends 'posts/base.html' %}
+
+{% block head_title %}
+	{% if instance.title %}
+		{{ instance.title }} | {{ block.super }}
+	{% else %}
+		{{ block.super }}
+	{% endif %}
+{% endblock head_title %}
+
+{% block nav_title %}
+	<b>DETAIL</b>    
+{% endblock nav_title %}
+
+
+{% block content %}
+	<div class="col-sm-6 col-sm-offset-3">
+		<center><h1>{{ title }}</h1></center>
+		{% if instance.image %}
+			<div class="thumbnail">
+				<img src="{{ instance.image.url }}" class="img-responsive" />
+			</div>
+		{% endif %}
+		<br>
+		<span class="glyphicon glyphicon-time"></span>
+		<small>
+			<b>
+				{{ instance.publish }}
+				{% if instance.publish > today %}								
+					| Only for Admin - 
+					<span style="color:red;">[ Draft ]</span> |
+					<span style='color:blue;'>Future Post</span>
+				{% endif %}
+			</b>
+		</small>
+
+		<br>
+
+		{% if instance.user.get_full_name %}
+			<p><b>Author:</b> {{ instance.user.get_full_name }}</p>
+		{% endif %}
+		
+		<!--
+		<a class="btn btn-info" href="http://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
+		facebook</a>
+
+		<a class="btn btn-primary" href="http://www.linkedin.com/shareArticle?url={{ request.build_absolute_uri }}&title=<your title>&summary=<your desc>&source={{ request.build_absolute_uri }}">Linked In</a>
+
+		 <a class="btn btn-danger" href="https://plus.google.com/share?url={{ request.build_absolute_uri }}">Google +</a>-->
+		 
+		<div class="fb-like" data-href="{{ request.build_absolute_uri }}" data-layout="button_count" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+
+		<div class="row">
+			<div class="col-sm-12">
+				<p>	
+					<hr>
+						<h4 style="font-family: 'Bree Serif', serif;color: #777777">{{ instance.content|linebreaks|safe }}</h4>
+					<hr>
+				</p>
+			</div>
+		</div>
+		<div class="fb-comments" data-href="{{ request.build_absolute_uri }}" data-numposts="5">
+		</div>
+	</div>   
+{% endblock content %}

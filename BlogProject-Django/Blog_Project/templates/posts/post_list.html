@@ -1,0 +1,74 @@
+{% extends "posts/base.html" %}
+
+{% block searchbar %}
+	<form method="GET" action="" class="navbar-form navbar-right">
+		<div class="col-sm-8 form-group">
+			<div class="nav navbar-nav navbar-right">
+				<input type="text" name="q" placeholder="Search" value="{{ request.GET.q }}" class="form-control"/>
+				<i type='submit' class="glyphicon glyphicon-search form-control-feedback"></i>
+			</div>
+		</div>
+	</form>
+{% endblock searchbar %}
+
+{% block nav_title %}
+<b>LIST</b>    
+{% endblock nav_title %}
+
+{% block content %}
+	<div class="col-sm-6 col-sm-offset-3">		
+		<div class="row">
+			{% for obj in object_list %}
+				<div class="col-sm-11 col-sm-offset-1">
+					<div class="thumbnail">
+						<div class="caption">
+							<a href="{{ obj.get_absolute_url }}"><h4><b>{{ obj.title }}</b></a></h4>
+							{% if obj.image %}
+								<img src="{{ obj.image.url }}" class="img-responsive" />
+							{% endif %}<br>
+							<span class="glyphicon glyphicon-time"></span>
+							<small>
+								<b>
+								{{ obj.publish }}
+								{% if obj.publish > today %}								
+									| Only for Admin - 
+									<span style="color:red;">[ Draft ]</span> |
+									<span style='color:blue;'>Future Post</span>
+								{% endif %}
+								</b>
+							</small>
+							{% if obj.user.get_full_name %}
+								<p><b>Author: </b>{{ obj.user.get_full_name }}</p>
+							{% endif %}
+							<h5 style="font-family: 'Bree Serif', serif; color: #777777">{{ obj.content|truncatechars:50 }}</h5>
+							<p><a href="{{ obj.get_absolute_url }}" class="btn btn-primary" 
+							role="button">View</a></p>
+						</div>
+					</div>
+				<hr>
+				</div>
+			{% endfor %}
+		</div>
+		
+		<div class="col-sm-offset-4">
+			<div class="pagination">
+			<span class="step-links">
+				{% if object_list.has_previous %}
+					<a class="btn btn-success" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><b>&laquo; First</b></a>
+					<a class="btn btn-success" href="?page={{ object_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><b>Previous</b></a>
+				{% endif %}
+
+				<span class="current btn btn-danger">
+					<b>Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}</b>
+				</span>
+
+				{% if object_list.has_next %}
+					<a class="btn btn-success" href="?page={{ object_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><b>Next</b></a>
+					<a class="btn btn-success" href="?page={{ object_list.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><b>Last &raquo;</b></a>
+				{% endif %}
+			</span>
+		</div>
+		</div>
+	</div>	
+
+{% endblock content %}

@@ -1,0 +1,21 @@
+{% extends "posts/base.html" %}
+
+{% block head_title %}
+	{% if instance.title %}
+		{{ instance.title }} | {{ block.super }}
+	{% else %}
+		{{ block.super }}
+	{% endif %}
+{% endblock head_title %}
+
+{% block content %}
+	<div class="col-sm-6 col-sm-offset-3">
+		<h1>Form</h1>
+		<form method="POST" enctype="multipart/form-data">
+			{{ form.as_p }}
+			{% csrf_token %}
+			<input class="btn btn-default" type="submit" value="Create Post">
+		</form>
+	</div>
+    
+{% endblock content %}
